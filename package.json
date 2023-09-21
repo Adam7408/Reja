@@ -1,0 +1,18 @@
+{
+  "name": "reja",
+  "version": "1.0.0",
+  "description": "Bu bizning birinchi loyihamiz",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "task": "nodemon task.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adam",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "moment": "^2.29.4",
+    "nodemon": "^3.0.1"
+  }
+}
