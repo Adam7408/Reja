@@ -42,11 +42,20 @@ app.set("view engine", "ejs");
 
 // 4) Routing code
 
-// hamma /ga keladigon
 
-app.get("/", function(req, res) {
-    res.end(`<h1>Hi!</h1>`); // http://localhost:3000 - da turipti
+app.post("/create-item", (req, res) => { 
+    // bergan savolimizni bodysini log qil 
+    // console.log(req.body); 
+    console.log(req.body); 
+    // javobni JSON formatda qilsin va  
+    res.json({test: "succes"}); 
+}); 
+
+ 
+app.get("/", function(req, res) { // http://localhost:3000 - da turipti
+    res.render('harid'); // render -> file ko'rsatuvchi 
 });
+
 
 app.get("/hello", function(req, res) {
     res.end(`<h1>HELLO WORLD</h1>`); // http://localhost:3000/hello - da turipti
