@@ -9,7 +9,6 @@
 
 // Single threaddan to'gri foydalanish kerak, logicasini noto'g'ri qilib qo'ysak qolgan 'user'larga javob bera olmay qoladi, shuning uchun asynchronous function, callback functionlarni yaxshi bilishimiz kerak
 
-
 // const list = [
 //     "yaxshi talaba bo'ling",                         // 0-20
 //     "togri boshliq tanlash va kop hato qiling",      // 20-30
@@ -21,7 +20,7 @@
 
 // CALLBACK function //
 
-// define qismi 
+// define qismi
 // async function maslahatBering(a, callb) {
 //     // kiritilgan yoshning tipi nomer bo'lmasa, NULL qaytarsin
 //     if(typeof a !== 'number') callb ('raqam kiriting', null);
@@ -57,7 +56,7 @@
 //         setTimeout(function() {
 //             callb(null, list[5]);
 //         }, 5000);
-        
+
 //     }
 // }
 
@@ -66,25 +65,17 @@
 //     if(err) console.log('ERROR: ', err); // xatolik mavjud bo'lsa, xatolikni ko'rsatadi
 //     else{
 //         console.log(data); // xatolik mavjud bo'lmasa, datani ko'rsatadi
-//     }    
+//     }
 // });
 // console.log('paddes here 1'); // (uchinchi shu chiqti)
 
 // javob:
-    // passed here 0
-    // passed here 1
-    // endi dam oling, foydasi yoq endi 
+// passed here 0
+// passed here 1
+// endi dam oling, foydasi yoq endi
 // javoblar async shaklida chiqti, callbackni javobini kutib o'tirmadi
 
-
-
-
-
-
 // ======================================================================================================================================
-
-
-
 
 // [20] Asynchronous functionlarni qo'llash
 
@@ -94,41 +85,27 @@
 // 1) Synchronous function (javobni srazi talab qiladigon)
 // 2) Asynchronous function
 
-
 const list = [
     "yaxshi talaba bo'ling", // 0-20
     "togri boshliq tanlash va kop hato qiling", // 20-30
     "uzingizga ishlashingizni boshlang", // 30-40
     "siz kuchli bolgan narsalarni qiling", // 40-50
     "yoshlarga inverstitsiya qiling", // 50-60
-    "endi dam oling, foydasi yoq endi" // 60
+    "endi dam oling, foydasi yoq endi", // 60
 ];
 
-
-
 // define qismi (ya'ni async functionni define qismida ishlatish)
-// async function maslahatBering(a) {
-//     if(typeof a !== 'number') throw new Error ('insert a number');
-//     else if(a <= 20) return list[0];
-//     else if(a > 20 && a <= 30) return list[1];
-//     else if(a > 30 && a <= 40) return list[2];
-//     else if(a > 40 && a <= 50) return list[3];
-//     else if(a > 50 && a <= 60) return list[4];
-//     else{
-//         return new Promise((resolve, reject) => {         // resolve(return), reject(throw new Error)
-//             setTimeout(() => {
-//                 resolve(list[5]);
-//             }, 5000)
-            
-//         });
-//         // async functionlar ichida setTimeout setIntervalga oxshagan core modulelar ishlamaydi, ishlatish uchun Promise ishlatiladi
-//         setTimeout(function () {
-//             return list[5];
-//         }, 5000);
-//     }
-// }
-
-
+async function maslahatBering(a) {
+    if (typeof a !== "number") throw new Error("insert a number");
+    else if (a <= 20) return list[0];
+    else if (a > 20 && a <= 30) return list[1];
+    else if (a > 30 && a <= 40) return list[2];
+    else if (a > 40 && a <= 50) return list[3];
+    else if (a > 50 && a <= 60) return list[4];
+    else {
+        return list[5];
+    }
+}
 
 // call qismi
 // then, catch method bilan
@@ -142,17 +119,14 @@ const list = [
 //     });
 // console.log('passed here 1');
 
-// javob: 
-    // passed here 0
-    // passed here 1
-    // togri boshliq tanlash va kop hato qiling (bu kutilganligi uchun ohiri chiqdi)
+// javob:
+// passed here 0
+// passed here 1
+// togri boshliq tanlash va kop hato qiling (bu kutilganligi uchun ohiri chiqdi)
 
 //--------------------------------------------------------------------------------------------------
 
-
-
 // endi, async functionni call qismida ishlatish
-
 
 // async, await bilan (javoblar ketma ketlik bilan olidani)
 // async function run() {
@@ -169,33 +143,30 @@ const list = [
 
 // --------------------------------------------------------------------------------------------------------------------------------
 
-
 // async functionlar ichida setTimeout, setIntervalga o'xshagan core modulelar ishlamaydi, ishlatish uchun 'Promise'dan foydalanamiz
 
 async function maslahatBering(a) {
-    if(typeof a !== 'number') throw new Error ('insert a number');
-    else if(a <= 20) return list[0];
-    else if(a > 20 && a <= 30) return list[1];
-    else if(a > 30 && a <= 40) return list[2];
-    else if(a > 40 && a <= 50) return list[3];
-    else if(a > 50 && a <= 60) return list[4];
-    else{
+    if (typeof a !== "number") throw new Error("insert a number");
+    else if (a <= 20) return list[0];
+    else if (a > 20 && a <= 30) return list[1];
+    else if (a > 30 && a <= 40) return list[2];
+    else if (a > 40 && a <= 50) return list[3];
+    else if (a > 50 && a <= 60) return list[4];
+    else {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve(list[5]);
-            }, 5000)
-            
+            }, 5000);
         });
-        
     }
 }
 
 async function run() {
-        let javob = await maslahatBering(25); // 1) buni javobi chiqgungacha kutadi va chiqmagungacha keyingisiga o'tmaydi
-        console.log(javob);
-        javob = await maslahatBering(70); // 2) buni javobi chiqgungacha kutadi va chiqmagungacha keyingisiga o'tmaydi
-        console.log(javob);
-        javob = await maslahatBering(41); // 3) buni javobi chiqgungacha kutadi va chiqmagungacha keyingisiga o'tmaydi
-        console.log(javob);
-    }
-    run();
+    let javob = await maslahatBering(25); // 1) buni javobi chiqgungacha kutadi va chiqmagungacha keyingisiga o'tmaydi
+    console.log(javob);
+    javob = await maslahatBering(70); // 2) buni javobi chiqgungacha kutadi va chiqmagungacha keyingisiga o'tmaydi
+    console.log(javob);
+    javob = await maslahatBering(41); // 3) buni javobi chiqgungacha kutadi va chiqmagungacha keyingisiga o'tmaydi
+    console.log(javob);
+}
+run();
