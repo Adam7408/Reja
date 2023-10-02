@@ -58,11 +58,39 @@ app.set("view engine", "ejs");
 
 // post qilganda --> /create-item degan manzilga kirib qolamiz
 app.post("/create-item", (req, res) => {
+    console.log("user /create-itemga kirib keldi");
+    // bergan savolimizni bodysini log qil
+    console.log(req.body);
+    // res.end('success'); // userga success degan narsani yuboramiz
+
+    // endi, yozgan rejalarimizni DataBasega yozishimiz kerak
+
+    // new_rejamiz - req.bodyni ichidan kelgan rejaga teng
+    const new_reja = req.body.reja;
+
+    // buning uchun biz yana DataBaseni objectidan(db()) foydalanamiz
+    db.collection("plans") // plans collectionini tanladik
+        .insertOne({ reja: new_reja }, (err, data) => {
+            //** Bu - Traditional form postga moslandan kod**/
+            // insertOne()  --> bitta qo'shish degani
+            // insertOne()  2ta parameter qabul qiladi
+            // 1) DataBasega yozmoqchi bo'lgan nom va req.bodydan kelgan reja (ya'ni inputga yozgan ma'lumotimiz)
+            // 2) MongoDB documentation bo'yicha insertOne() - callback qaytaradi
+            if (err) {
+                // agar error mavjud bo'lsa
+                console.log(err); // errorni log qil,
+                res.end("nimadir xato bo'ldi!"); // hamda userga javob qaytarmoqchimiz (something went wrong)
+            } else {
+                // aks holda, ya'ni muvaffaqiyatli bo'lsa
+                res.end("Muvaffaqiyatli qo'shildi"); // deb, userga javob qaytaramiz (successfully added)
+            }
+        });
+
     // bergan savolimizni bodysini log qil
     // console.log(req.body);
-    console.log(req.body);
+    // console.log(req.body);
     // javobni JSON formatda qilsin va
-    res.json({ test: "succes" });
+    // res.json({ test: "succes" });
 });
 
 // JSON formatda to'gridan to'gri olib kelomimiz, buning uchun File System kerak bo'ladi
@@ -72,7 +100,18 @@ app.get("/author", function (req, res) {
 });
 
 app.get("/", function (req, res) {
-    res.render("reja"); // render -> file ko'rsatuvchi
+    console.log('user /ga kirib keldi');
+    db.collection("plans")
+        .find()
+        .toArray((err, data) => {
+            if (err) {
+                console.log(err);
+                res.end("Nimadir xato boldi!");
+            } else {
+                console.log(data);
+                res.render("reja", { items: data });
+            }
+        });
 });
 
 module.exports = app;

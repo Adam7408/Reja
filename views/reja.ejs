@@ -1,31 +1,109 @@
-<!DOCTYPE html> 
-<html lang="en"> 
-    <head> 
-        <meta charset="UTF-8"> 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-        <title>REJA</title> 
-        <link rel="stylesheet" 
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" 
-        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" 
-        crossorigin="anonymous"> 
-    </head> 
-    <body style="background-color: #b8bbb1"> 
-        <div class="container"> 
-            <h1 class="display-4 text-center py-1">REJA VA MAQSADLAR</h1> 
- 
-            <div class="jumbotron p-3 shadow-sm"> 
-                <!-- form POSTnqilganda -- /create-item degan URLga keladi --> 
-                <form id="create-form" action="/create-item" method="POST"> 
-                    <div class="d-flex align-items-center"> 
-                        <input id="create-field" name="item" autofocus autocomplete="off" class="form-control mr-3" type="text" style="flex:5"> 
- 
-                        <button class="btn btn-primary" style="border-radius: 20px"> 
-                            Yangi Harid Qo'shish 
-                        </button> 
-                    </div> 
-                </form> 
-            </div> 
- 
-        </div> 
-    </body> 
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>REJA</title>
+        <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+        crossorigin="anonymous">
+    </head>
+    <body style="background-color: #b8bbb1">
+        <div class="container">
+            <h1 class="display-4 text-center py-1">REJA VA MAQSADLAR</h1>
+
+            <div class="jumbotron p-3 shadow-sm">
+                <!-- form POSTnqilganda -- /create-item degan URLga keladi -->
+                <form id="create-form" action="/create-item" method="POST">
+                    <div class="d-flex align-items-center">
+                        <input id="create-field" name="reja" autofocus autocomplete="off" class="form-control mr-3" type="text" style="flex:5">
+
+                        <button class="btn btn-primary" style="border-radius: 20px">
+                            Yangi Rejaf Qo'shish
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+
+            <!-- biz kiritgan ma'lumotlardan - ejsni ichida foydalanamiz -->
+            <!-- 'app.js'dagi -- res.render('reja', {items: data});dan foydalanamiz -->
+            <!-- 
+                buning uchun, mahsus syntax bor, 
+                bizning ejsga yuklangan qiymatlarni - ejsda o'qishimiz uchun
+                mahsus protsent(%) belgisi asosida shakllangan syntaxdan foydalanamiz
+            
+            -->
+
+
+            <!-- ------------------------------------------------------------------------------------------------------------------- -->
+
+
+            <!-- 
+                Listdan iborat bo'lgan view(ko'rinish) yasab olamiz
+
+                'items'ni har bir elementini ko'rib chiqib, har bir elementning qiymatidan foydalangan holatda, shakllantirmoqchimiz
+            
+            -->
+            <ul id="item-list" class="list-group pb-5">
+                <!-- 
+                    !bu o'sha mahsus syntax!
+                    buning ichida( <% %> ) biz, ejsga yuklangan qiymatlarni chaqirishimiz mumkin
+                    'items' arrayning 0nchi indexda joylandan objectning ichidagi elementni qaytarsin
+
+                -->
+
+                <!-- 
+                    buni LISTni ichiga kiritamiz,
+                    hamda - har bitta elementni qiymatidan foydalangan holda RENDER(ko'rsatish) qilamiz
+
+
+                    uning uchun: map()dan foydalanamiz, va map() bizga har bitta arrayni elementini qo'limizga olib beradi
+                    map() methodi - har bir qiymatni render qilib beradi, ya'ni har bitta qiymatni qabul qilib olib beradi
+                    bu - JavaScript arrayni hususiyati
+                    
+                    buni 2 qismga bo'lib olamiz
+                -->
+
+                <!-- boshlang'ich qism -->
+                <% items.map(function(item) { %> 
+
+                    <!-- ya'ni endi, har bitta listimizni o'zida 'item'ni qiymatidan foydalanishimiz mumkin -->
+                    <li class="list-group-item list-group-item-indo d-flex align-items-center justify-content-between">
+                        
+                        <!-- 'item'ni ichidan rejani chiqarib olamiz -->
+                        <span class="item-text"><%=item.reja%></span>
+                        <div>
+                            <!-- 
+                                DataBaseda IDlar bor, ularni ham biriktirishimiz kerak, u IDlarni <buttton>larga biriktirib olamiz
+
+                                knopka bosilgan payt - imenna qaysi IDga tegishli knopka bosilganini topib olish uchun,
+                                qaysi rejaga tegishli o'zgartirish yoki o'chirish knopkasi bosilganini bilib olish uchun
+
+                                <button>ga ' data-id="<%=item._id%>" 'ni kiritib olamiz
+                            -->
+                            <button data-id="<%=item._id%>" class="edit-me btn btn-secondary btn-sm mr-1" style="border-radius: 20px;">
+                                Ozgartirish      
+                            </button>
+
+                            <button data-id="<%=item._id%>" class="delete-me btn btn-danger btn-sm">Ochirish</button>
+                        </div>
+                        
+                    </li>
+                <!-- yakunlash qism -->
+                <% }) %>
+
+            </ul>
+
+            <button class="delete-me btn btn-danger btn-sm" style="border-radius: 20px">
+                Hamma Rejalarni o'chirish
+            </button>
+        </div>
+
+        <!-- axios scriptini ejsni ohiriga kiritsak - axiosni ishlata olamiz -->
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <!-- 'reja.ejs'da 'browser.js'ni ishlatamiz -->
+        <script src="/browser.js"></script>
+    </body>
 </html>
