@@ -1,3 +1,27 @@
+// F-Task:
+
+// findDoublers function tuzing, unga faqat bitta string argument pass bolib, agar stringda bir hil harf qatnashgan bolsa true, qatnashmasa false qaytarishi kerak.
+
+// masalan: getReverse("hello") return true return qiladi
+
+function findDoublers(soz) {
+    let ohshasHarf = false;
+
+    for (let i = 0; i < soz.length; i++) {
+        if (soz.split(soz[i]).length - 1 > 1) {
+            ohshasHarf = true;
+            break;
+        }
+    }
+
+    return ohshasHarf;
+}
+
+// call
+console.log(findDoublers("hello"));
+
+// =========================================================================================
+
 // E-Task:
 
 // Shunday function tuzing, u bitta string argumentni qabul qilib, o'sha stringni teskari qilib return qilsin
@@ -5,17 +29,15 @@
 // masalan: getReverse("hello") return qilsin "olleh"
 
 // Define
-function getReverse(soz) {
-    let teskari = soz.split("").reverse().join("");
-    return teskari;
-}
+// function getReverse(soz) {
+//     let teskari = soz.split("").reverse().join("");
+//     return teskari;
+// }
 
-// Call
-console.log(getReverse("hello"));
-
+// // Call
+// console.log(getReverse("hello"));
 
 // ==================================================================================
-
 
 // // D-Task:
 // // Shunday class tuzing nomi Shop, va uni constructoriga 3 hil mahsulot pass bolsin, hamda classning 3ta methodi bolsin,

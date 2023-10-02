@@ -71,19 +71,24 @@ app.post("/create-item", (req, res) => {
     // buning uchun biz yana DataBaseni objectidan(db()) foydalanamiz
     db.collection("plans") // plans collectionini tanladik
         .insertOne({ reja: new_reja }, (err, data) => {
+
+            console.log(data.ops);
+            // modern post bo'lgani uchun - res.jsonga datamizni ichidagi 1nchi indexini yuborishini yozamiz
+            res.json(data.ops[0]);
+
             //** Bu - Traditional form postga moslandan kod**/
             // insertOne()  --> bitta qo'shish degani
             // insertOne()  2ta parameter qabul qiladi
             // 1) DataBasega yozmoqchi bo'lgan nom va req.bodydan kelgan reja (ya'ni inputga yozgan ma'lumotimiz)
             // 2) MongoDB documentation bo'yicha insertOne() - callback qaytaradi
-            if (err) {
-                // agar error mavjud bo'lsa
-                console.log(err); // errorni log qil,
-                res.end("nimadir xato bo'ldi!"); // hamda userga javob qaytarmoqchimiz (something went wrong)
-            } else {
-                // aks holda, ya'ni muvaffaqiyatli bo'lsa
-                res.end("Muvaffaqiyatli qo'shildi"); // deb, userga javob qaytaramiz (successfully added)
-            }
+        //     if (err) {
+        //         // agar error mavjud bo'lsa
+        //         console.log(err); // errorni log qil,
+        //         res.end("nimadir xato bo'ldi!"); // hamda userga javob qaytarmoqchimiz (something went wrong)
+        //     } else {
+        //         // aks holda, ya'ni muvaffaqiyatli bo'lsa
+        //         res.end("Muvaffaqiyatli qo'shildi"); // deb, userga javob qaytaramiz (successfully added)
+        //     }
         });
 
     // bergan savolimizni bodysini log qil
