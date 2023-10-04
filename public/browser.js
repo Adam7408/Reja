@@ -12,11 +12,6 @@ JavaScript esa bizi frontendimizga turli hil harakatlarni amalga oshiradi (bizga
 
 */
 
-/*
-biror bir rejani create qilsak u DataBasega muvaffaqiyatli yozilgandan keyin, yozilgan Datalarni ejsda ohiriga qo'shamiz, bu logicani JavaScript orqali yozib olamiz
-
-*/
-
 
 
 
@@ -47,7 +42,7 @@ let createField = document.getElementById("create-field");
 document
     .getElementById("create-form")
     .addEventListener("submit", function(e) {
-        // formamiz submit bo'ganda, ya'ni bitta reja yozganimizdan keyin submit qilganimizda - form tradition requestimiz by default ishga tushganda qanaqadir URLga o'tib ketmasin
+        // formamiz submit bo'ganda, ya'ni bitta reja yozganimizdan keyin submit qilganimizda - form traditional requestimiz by default ishga tushganda qanaqadir URLga o'tib ketmasin
         e.preventDefault();
         
         /*
@@ -55,11 +50,13 @@ document
         bu post qilishimiz traditional formni requesti emas, bu axios request hisoblanadi 
         axiosni ishga tushirishimiz uchun - FrontEndimizda axios packageni require qilib olishimiz kerak 
 
-        AXIOSni yaxshi tarafi - json formatdi qabul qilib, avtamatik ravishta object qilib beradi, 
+        AXIOSni yaxshi tarafi - responseni json formatdi qabul qilib, avtamatik ravishta object qilib beradi, 
         va yuboryatgan paytda - avtamatik ravishta objectni jsonga aylantirib post qiladi
 
         documentation bo'yicha - axiosni post degan methodi bor
-        post methodini ichiga ikki narsa yuborishimiz kerak
+        post methodini ichiga ikki narsa yuborishimiz kerak:
+        1) URL 
+        2) request body qismidan boryatgan narsa
         */
         axios // modern post, modern request
             .post("/create-item", { reja: createField.value }) // form submit qilingan payt - inputga yozilgan narsani qiymatni rejaga tenglab olib, axios orqali post qilyapmiz
@@ -77,3 +74,68 @@ document
             });
 
 });
+
+// ochirish va ozgartirish knopkalarini ishga tushiramiz
+document.addEventListener('click', function(e) {
+    console.log(e.target);
+
+    // delete operatsiya
+    if(e.target.classList.contains('delete-me')){
+        if(confirm("aniq ochirmoqchimisiz?")){
+            // bu data-idni id nom bilan - app.jsning /delete-item routeriga post qilamiz
+            axios
+            .post("/delete-item", {id: e.target.getAttribute("data-id")})
+            .then((response) => {
+                console.log(response.data);
+
+                // shu yergacha faqat databasedan o'chdi, endi viewdan ham o'chirishimiz kerak
+                e.target.parentElement.parentElement.remove();
+                /* ya'ni click qilgan knopkamizni otasini otasini ochiramiz (ya'ni <button>ni otasi <div>, <div>ni otasi <li> biz uchalasini ham ochiramiz, ya'ni masalan: engliz tilini organish, ozgartirish, ochirish uchovini teng ochiryapmiz)
+                */
+            })
+            // mabodo error yuzaga kelsa xatolikni chiqarsin
+            .catch((err) =>{
+                console.log("Iltimos qaytadan harakat qiling!");
+            });
+        } 
+    }
+
+    // endi edit operatsiyasini qilamiz
+    if(e.target.classList.contains('edit-me')) {
+        let userInput = prompt("O'zgartirish kiriting", e.target.parentElement.parentElement.querySelector(".item-text").innerHTML); // spanni classini olamiz, buning uchun bobosidan ruhsat olib spanni classini olamiz  ya'ni amakisini classini olyapmiz, va bizga uni texti kerak bo'lgani uchun innerHTMLni yozamiz
+
+        // kiritgan qiymatimiz mavjud bo'lsa
+        if(userInput) {
+            // console.log(userInput);
+
+            // endi FrontEnd(browser.js)dan o'zgartirmoqchi bo'lgan narsamizni idsini axios orqali '/edit-item'ga post qilamiz, ya'ni BackEnd(app.js)ga post qilamiz
+            axios.post("/edit-item", { 
+                id: e.target.getAttribute("data-id"), 
+                new_input: userInput,
+            }).then(response => { // shu yergacha faqat DataBaseda o'zgardi, endi viewda ya'ni reja.ejsda o'zgartiramiz
+                console.log(response.data);
+                e.target.parentElement.parentElement.querySelector(
+                    ".item-text"
+                ).innerHTML = userInput;
+            }).catch(err => {
+                console.log("Iltimos qaytadan harakat qiling!");
+            });
+        }
+    }
+});
+
+// shu yergacha CRUD ishini hammasi tamom bo'ldi, endi bularni hammasini o'chirvorish uchun ohirgi knopkani ishga tushiraiz
+
+document.getElementById("clear-all").addEventListener("click", function() {
+    // formni ichida bo'lmaganligi uchun preventDefault qilishimiz shart emas, demak knopka bosilgan paytda to'gridan to'gri BackEndga zapros bo'lsin
+
+    // yangi '/delete-all' degan API yasab u yerga zapros yuboramiz
+
+    axios.post("/delete-all", {delete_all : true}) // delete-all elementimizni qiymati true bo'lsin
+    .then(response => {
+       alert(response.data.state);
+       document.location.reload();
+    }).catch(err => {
+        console.log("Iltimos qaytadan harakat qiling!");
+    })
+})
